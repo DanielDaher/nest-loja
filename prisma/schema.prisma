@@ -17,8 +17,15 @@ datasource db {
 model User {
   id    Int     @default(autoincrement()) @id
   email String  @unique
+  password       String   @db.Text
+  role  UserRole @default(USER)
   name  String?
   posts Post[]
+}
+
+enum UserRole {
+  ADMIN
+  USER
 }
 
 model Post {

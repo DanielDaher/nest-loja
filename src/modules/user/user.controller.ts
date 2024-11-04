@@ -11,6 +11,7 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
+import { RequiredRoles } from '../authentication/decorators/required-role.decorator';
 
 @Controller('user')
 export class UserController {
@@ -30,6 +31,7 @@ export class UserController {
   }
 
   @Get()
+  @RequiredRoles()
   @Swagger({
     summary: 'Rota para buscar todos os usuários cadastrados',
     description: '## Somente o admin consegue listar todos os usuários',
@@ -45,6 +47,7 @@ export class UserController {
   }
 
   @Get(':id')
+  @RequiredRoles()
   @Swagger({
     summary: 'Rota para buscar um usuário pelo id',
     applyBadRequest: true,
@@ -59,6 +62,7 @@ export class UserController {
   }
 
   @Patch(':id')
+  @RequiredRoles()
   @Swagger({
     summary: 'Rota para editar um usuário pelo id',
     description:
@@ -75,6 +79,7 @@ export class UserController {
   }
 
   @Delete(':id')
+  @RequiredRoles()
   @Swagger({
     summary: 'Rota para deletar um usuário pelo id',
     description:
