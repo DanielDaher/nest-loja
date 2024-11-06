@@ -7,9 +7,9 @@ import { AuthenticationModule } from './modules/authentication/authentication.mo
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    AuthenticationModule,
     UserModule,
     PrismaModule,
-    AuthenticationModule,
   ],
   controllers: [],
   providers: [],

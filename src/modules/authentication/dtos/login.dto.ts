@@ -1,17 +1,20 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 
 export class LoginInputDto {
+  @ApiProperty({ example: 'user@getnada.com' })
   @IsString({ message: '$property deve ser do tipo texto' })
   @IsNotEmpty({ message: '$property é um campo obrigatório' })
-  credential: string;
+  credential!: string;
 
+  @ApiProperty({ example: '123456789' })
   @IsString({ message: '$property deve ser do tipo texto' })
   @IsNotEmpty({ message: '$property é um campo obrigatório' })
-  password: string;
+  password!: string;
 }
 
 export class LoginOutputDto {
-  accessToken: string;
+  accessToken!: string;
 }
 
 export class PayloadDto {
@@ -20,4 +23,3 @@ export class PayloadDto {
   name: string;
   profilePicture: string | null;
 }
-//FAZER MODULO E ROTAS PARA LOGIN.
