@@ -12,7 +12,9 @@ export class AuthorizationGuard implements CanActivate {
       ROLE_KEY,
       [context.getHandler(), context.getClass()],
     );
-    if (!requiredRoles) {
+
+    const unspecifiedRoles = !requiredRoles.length;
+    if (unspecifiedRoles) {
       return true;
     }
     const { user } = context.switchToHttp().getRequest();
