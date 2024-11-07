@@ -13,14 +13,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id    Int     @default(autoincrement()) @id
-  email String  @unique
+  id             Int      @id @default(autoincrement())
+  email          String   @unique
   password       String   @db.Text
-  role  UserRole @default(USER)
-  name  String?
-  posts Post[]
+  role           UserRole @default(USER)
+  name           String?
+  phone          String   @db.VarChar(256)
+  active         Boolean  @default(true)
+  profilePicture String?  @db.VarChar(500)
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  posts          Post[]
 }
 
 enum UserRole {
@@ -29,7 +33,7 @@ enum UserRole {
 }
 
 model Post {
-  id        Int      @default(autoincrement()) @id
+  id        Int      @id @default(autoincrement())
   title     String
   content   String?
   published Boolean? @default(false)

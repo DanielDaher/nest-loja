@@ -7,9 +7,10 @@ const hashPassword = (password: string): string => {
 };
 
 const user: Prisma.UserCreateInput = {
+  name: 'testerson',
+  phone: '1112345678',
   email: 'user@getnada.com',
   password: hashPassword('123456789'),
-  name: 'testerson',
 };
 
 export async function seedUser(prisma: PrismaClient): Promise<void> {

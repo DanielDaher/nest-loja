@@ -26,8 +26,8 @@ export class UserController {
     createdResponse: CreateUserDto,
     tags: ['Gerencial - Cadastros', 'User - Cadastros'],
   })
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto) {
+    return await this.userService.create(createUserDto);
   }
 
   @Get()
@@ -42,8 +42,8 @@ export class UserController {
     okResponse: [CreateUserDto],
     tags: ['Gerencial - Cadastros', 'User - Cadastros'],
   })
-  findAll() {
-    return this.userService.findAll();
+  async findAll() {
+    return await this.userService.findAll();
   }
 
   @Get(':id')
@@ -57,8 +57,8 @@ export class UserController {
     okResponse: CreateUserDto,
     tags: ['Gerencial - Cadastros', 'User - Cadastros'],
   })
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return await this.userService.findOne(+id);
   }
 
   @Patch(':id')
@@ -91,7 +91,7 @@ export class UserController {
     okResponse: CreateUserDto,
     tags: ['Gerencial - Cadastros', 'User - Cadastros'],
   })
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return await this.userService.remove(+id);
   }
 }
