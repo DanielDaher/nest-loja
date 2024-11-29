@@ -1,6 +1,6 @@
-import { UserRole } from '@prisma/client';
+import { AccountRole } from '@prisma/client';
 
 export interface IPayload {
   sub: string;
-  role: UserRole;
+  role: AccountRole;
 }

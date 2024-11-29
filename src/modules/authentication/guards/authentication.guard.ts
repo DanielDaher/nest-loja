@@ -6,6 +6,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import ErrorMessages from 'src/errors/error-messages';
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {
@@ -16,7 +17,7 @@ export class AuthenticationGuard implements CanActivate {
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException(ErrorMessages.UNATHORIZED);
     }
 
     try {
@@ -25,7 +26,7 @@ export class AuthenticationGuard implements CanActivate {
       });
       request['user'] = payload;
     } catch {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException(ErrorMessages.UNATHORIZED);
     }
     return true;
   }

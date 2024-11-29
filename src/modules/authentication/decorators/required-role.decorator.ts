@@ -4,13 +4,13 @@ import {
   ApiForbiddenResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { UserRole } from '@prisma/client';
+import { AccountRole } from '@prisma/client';
 import { ServerError } from 'src/shared/errors/error.dto';
 import { AuthenticationGuard } from '../guards/authentication.guard';
 import { AuthorizationGuard } from '../guards/authorization.guard';
 import { SetRoles } from './set-role.decorator';
 
-export function RequiredRoles(...roles: UserRole[]) {
+export function RequiredRoles(...roles: AccountRole[]) {
   return applyDecorators(
     SetRoles(...roles),
     UseGuards(AuthenticationGuard, AuthorizationGuard),

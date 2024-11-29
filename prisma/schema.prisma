@@ -14,29 +14,80 @@ datasource db {
 }
 
 model User {
-  id             Int      @id @default(autoincrement())
-  email          String   @unique
-  password       String   @db.Text
-  role           UserRole @default(USER)
-  name           String?
-  phone          String   @db.VarChar(256)
-  active         Boolean  @default(true)
-  profilePicture String?  @db.VarChar(500)
-  createdAt      DateTime @default(now()) @map("created_at")
-  updatedAt      DateTime @updatedAt @map("updated_at")
-  posts          Post[]
+  id        Int           @id @default(autoincrement())
+  role      AccountRole   @default(USER)
+  name      String
+  email     String        @unique
+  password  String        @db.Text
+  cpf       String        @unique
+  phone     String        @db.VarChar(256)
+  imageUrl  String?       @db.VarChar(500)
+  status    AccountStatus @default(ACTIVE)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  addresses Address[]
+  documents Document[]
+  payments  Payment[]
 }
 
-enum UserRole {
+model Address {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  zipcode    String
+  street     String
+  number     String
+  complement String?
+  district   String
+  city       String
+  state      String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model Document {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  fileUrl   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Payment {
+  id             Int           @id @default(autoincrement())
+  userId         Int
+  bankName       String
+  bankAccount    String
+  agency         String
+  value          Float
+  method         PaymentMethod @default(PIX)
+  dueDate        DateTime
+  type           PaymentType   @default(MONTHLY)
+  parcelQuantity Int           @default(1)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  user           User          @relation(fields: [userId], references: [id])
+}
+
+enum AccountStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum AccountRole {
   ADMIN
   USER
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean? @default(false)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
+enum PaymentMethod {
+  PIX
+  CREDIT_CARD
+  MONEY
+}
+
+enum PaymentType {
+  MONTHLY
+  DAILY
+  YEARLY
 }

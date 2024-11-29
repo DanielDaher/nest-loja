@@ -7,16 +7,32 @@ const hashPassword = (password: string): string => {
 };
 
 const user: Prisma.UserCreateInput = {
-  name: 'testerson',
-  phone: '1112345678',
   email: 'user@getnada.com',
+  name: 'testerson',
+  cpf: '11111111111',
   password: hashPassword('123456789'),
+  phone: '11111111111',
+  addresses: {
+    create: {
+      zipcode: '12345-678',
+      street: 'Example Street',
+      number: '123',
+      complement: 'Apt 4',
+      district: 'Example District',
+      city: 'Example City',
+      state: 'EX',
+    },
+  },
+  documents: {
+    create: {
+      fileUrl: 'path/to/file.pdf',
+    },
+  },
 };
 
 export async function seedUser(prisma: PrismaClient): Promise<void> {
   await prisma.user.create({
     data: user,
   });
-
   console.log('User seed OK.');
 }
