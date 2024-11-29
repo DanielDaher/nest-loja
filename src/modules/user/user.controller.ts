@@ -10,8 +10,10 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { RequiredRoles } from '../authentication/decorators/required-role.decorator';
+import { Queries } from 'src/shared/validators/dtos/queries.dto';
 
 @Controller('user')
 export class UserController {
@@ -39,11 +41,12 @@ export class UserController {
     applyUnauthorized: true,
     applyForbidden: true,
     applyBearerAuth: true,
-    okResponse: [CreateUserDto],
+    okPaginatedResponse: CreateUserDto,
     tags: ['Gerencial - Cadastros', 'User - Cadastros'],
   })
-  async findAll() {
-    return await this.userService.findAll();
+  async findAll(@Query() queries: Queries) {
+    const { size, page, search } = queries;
+    return await this.userService.findAll(size, page, search);
   }
 
   @Get(':id')

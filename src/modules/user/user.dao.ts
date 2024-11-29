@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { AccountStatus, Prisma } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PrismaService } from 'src/database/prisma.service';
@@ -9,8 +9,11 @@ const userSelect = {
   name: true,
   email: true,
   phone: true,
-  profilePicture: true,
-  active: true,
+  imageUrl: true,
+  status: true,
+  addresses: true,
+  documents: true,
+  payments: true,
   createdAt: true,
   updatedAt: true,
 } satisfies Prisma.UserSelect;
@@ -19,16 +22,28 @@ const userSelect = {
 export class UserDAO {
   constructor(private prisma: PrismaService) {}
 
-  findAll(q?: string) {
-    return this.prisma.user.findMany({
-      where: {
-        AND: [
-          { role: 'USER' },
-          { OR: [{ name: { contains: q } }, { email: { contains: q } }] },
-        ],
-      },
-      select: userSelect,
-    });
+  findAll(size?: number, page?: number, search?: string) {
+    const where: Prisma.UserWhereInput = {
+      AND: [
+        { role: 'USER' },
+        {
+          OR: [{ name: { contains: search } }, { email: { contains: search } }],
+        },
+      ],
+    };
+
+    const paginateData: boolean = Boolean(page && size);
+
+    return this.prisma.$transaction([
+      this.prisma.user.findMany({
+        where,
+        take: paginateData ? size : undefined,
+        skip: paginateData ? (page - 1) * size : undefined,
+        select: userSelect,
+        orderBy: paginateData ? { createdAt: 'desc' } : undefined,
+      }),
+      this.prisma.user.count({ where }),
+    ]);
   }
 
   findById(id: number) {
@@ -38,19 +53,33 @@ export class UserDAO {
     });
   }
 
-  findByEmail(email: string) {
-    return this.prisma.user.findUnique({
-      where: { email },
+  findByCredential(credential: string) {
+    return this.prisma.user.findFirst({
+      where: {
+        OR: [{ email: credential }, { phone: credential }, { cpf: credential }],
+      },
     });
   }
 
-  create(data: CreateUserDto) {
-    return this.prisma.user.create({
-      data: {
-        ...data,
-        role: 'USER',
-        active: true,
-      },
+  async create(data: CreateUserDto) {
+    const { address, ...createData } = data;
+    console.log(data);
+    console.log('address: ', address);
+
+    return await this.prisma.$transaction(async (trx) => {
+      return await trx.user.create({
+        select: userSelect,
+        data: {
+          ...createData,
+          role: 'USER',
+          addresses: {
+            create: {
+              ...address,
+              zipcode: address.zipcode,
+            },
+          },
+        },
+      });
     });
   }
 
@@ -67,20 +96,14 @@ export class UserDAO {
     });
   }
 
-  async updateStatus(id: number, status: boolean) {
+  async updateStatus(id: number, status: AccountStatus) {
     return await this.prisma.$transaction(async (trx) => {
       return await trx.user.update({
         where: { id },
-        data: { active: status },
+        data: { status },
         select: userSelect,
       });
     });
-
-    // return this.prisma.user.update({
-    //   where: { id },
-    //   data: { active: status },
-    //   select: userSelect,
-    // });
   }
 
   async remove(id: number) {

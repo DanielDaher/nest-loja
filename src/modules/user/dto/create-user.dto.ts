@@ -1,11 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { AccountStatus } from '@prisma/client';
+import { Type } from 'class-transformer';
 import {
   IsEmail,
   IsNotEmpty,
+  IsObject,
   IsString,
   MaxLength,
   MinLength,
+  ValidateNested,
 } from 'class-validator';
+import { CreateAddressOnRegisterServiceDto } from 'src/modules/address/dto/create-address.dto';
 
 export class CreateUserDto {
   @ApiProperty({
@@ -40,5 +45,14 @@ export class CreateUserDto {
 
   @ApiProperty({ example: 'ACTIVE' })
   @IsNotEmpty({ message: 'o campo $property precisa estar preenchido' })
-  status!: string;
+  status!: AccountStatus;
+
+  @ApiProperty({ type: CreateAddressOnRegisterServiceDto }) // Use the Address DTO type
+  @IsObject({ message: 'o campo $property deve ser um objeto' })
+  @Type(() => CreateAddressOnRegisterServiceDto)
+  @ValidateNested({ each: true })
+  address!: CreateAddressOnRegisterServiceDto; // Instance of the Address DTO
+
+  @ApiProperty({ example: 1, readOnly: true })
+  documentsId!: number;
 }
