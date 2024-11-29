@@ -13,9 +13,10 @@ export class AuthenticationService {
     private jwtService: JwtAuthService,
   ) {}
 
-  async login(data: LoginInputDto): Promise<LoginOutputDto> {
+  async login(data: LoginInputDto, isAdmin?: boolean): Promise<LoginOutputDto> {
     const account = await this.authenticationDAO.getByCredential(
       data.credential,
+      isAdmin,
     );
 
     if (!account) {

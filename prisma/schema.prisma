@@ -13,6 +13,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Security {
+  id            Int       @id @default(autoincrement())
+  credential    String    @unique @db.VarChar(512)
+  code          String?   @db.VarChar(32)
+  codeExpiresIn DateTime? @db.DateTime(0)
+  validated     Boolean   @default(false)
+}
+
+model Permission {
+  id     Int         @id @default(autoincrement())
+  title  Permissions @unique
+  admins Admin[]
+}
+
+model Admin {
+  id            Int           @id @default(autoincrement())
+  role          AccountRole   @default(ADMIN)
+  cpf           String        @unique @db.VarChar(14)
+  name          String        @db.VarChar(512)
+  email         String        @unique @db.VarChar(512)
+  password      String        @db.Text
+  status        AccountStatus
+  imageUrl      String?       @db.Text
+  code          String?       @db.VarChar(32)
+  codeExpiresIn DateTime?     @db.DateTime(0)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  permissions   Permission[]
+}
+
 model User {
   id        Int           @id @default(autoincrement())
   role      AccountRole   @default(USER)
@@ -90,4 +120,14 @@ enum PaymentType {
   MONTHLY
   DAILY
   YEARLY
+}
+
+enum Permissions {
+  dashboard
+  usuarios
+  pedidos
+  financeiro
+  configuracoes
+  faqs
+  textos
 }

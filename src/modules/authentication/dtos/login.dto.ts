@@ -13,6 +13,18 @@ export class LoginInputDto {
   password!: string;
 }
 
+export class LoginAdmInputDto {
+  @ApiProperty({ example: 'admin@getnada.com' })
+  @IsString({ message: '$property deve ser do tipo texto' })
+  @IsNotEmpty({ message: '$property é um campo obrigatório' })
+  credential!: string;
+
+  @ApiProperty({ example: '123456789' })
+  @IsString({ message: '$property deve ser do tipo texto' })
+  @IsNotEmpty({ message: '$property é um campo obrigatório' })
+  password!: string;
+}
+
 export class LoginOutputDto {
   accessToken!: string;
 }
@@ -21,5 +33,5 @@ export class PayloadDto {
   id: string;
   role: string;
   name: string;
-  profilePicture: string | null;
+  imageUrl: string | null;
 }
