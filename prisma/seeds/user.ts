@@ -35,4 +35,6 @@ export async function seedUser(prisma: PrismaClient): Promise<void> {
     data: user,
   });
   console.log('User seed OK.');
+  console.log('Address seed OK.');
+  console.log('Documents seed OK.');
 }
