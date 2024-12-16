@@ -1,6 +1,7 @@
 import { UserDAO } from './user.dao';
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -51,6 +52,8 @@ export class UserService {
   async update(id: number, data: UpdateUserDto) {
     const register = await this.findOne(id);
 
+    this.verifyInvalidUpdatedFields(data);
+
     return await this.userDAO.update(register.id, data);
   }
 
@@ -71,6 +74,16 @@ export class UserService {
 
     if (userWithCpf || userWithEmail || userWithPhone) {
       throw new ConflictException(ErrorMessages.ACCOUNT_ALREADY_EXISTS);
+    }
+  }
+
+  verifyInvalidUpdatedFields(data: UpdateUserDto) {
+    if (data.role) {
+      throw new ForbiddenException(ErrorMessages.ROLE_FORBIDDEN_FIELD);
+    }
+
+    if (data.status) {
+      throw new ForbiddenException(ErrorMessages.STATUS_FORBIDDEN_FIELD);
     }
   }
 }

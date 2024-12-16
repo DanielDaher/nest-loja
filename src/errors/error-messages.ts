@@ -17,6 +17,10 @@ export default {
   TEXT_NOT_FOUND: 'Texto não encontrado na base de dados.',
 
   FORBIDDEN: 'Sem permissão para acessar esse recurso.',
+  STATUS_FORBIDDEN_FIELD: 'Sem permissão para alterar o valor do campo status.',
+  PASSWORD_FORBIDDEN_FIELD:
+    'A senha só pode ser alterada no fluxo de resetar senha.',
+  ROLE_FORBIDDEN_FIELD: 'Sem permissão para alterar o valor do campo role.',
   PLAN_FORBIDDEN: 'Seu plano atual não permite acessar esse recurso.',
   INACTIVE: 'Sua conta foi suspensa.',
   PENDING: 'Sua conta ainda não foi aprovada. Aguarde.',
