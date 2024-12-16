@@ -1,6 +1,9 @@
 import { UserDAO } from './user.dao';
-import { Injectable } from '@nestjs/common';
-import AppException from 'src/errors/app-exception';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import ErrorMessages from 'src/errors/error-messages';
@@ -39,7 +42,7 @@ export class UserService {
     const register = await this.userDAO.findById(id);
 
     if (!register) {
-      throw new AppException(404, ErrorMessages.USER_NOT_FOUND);
+      throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
     }
 
     return register;
@@ -67,7 +70,7 @@ export class UserService {
     const userWithPhone = await this.userDAO.findByCredential(phone);
 
     if (userWithCpf || userWithEmail || userWithPhone) {
-      throw new AppException(409, ErrorMessages.ACCOUNT_ALREADY_EXISTS);
+      throw new ConflictException(ErrorMessages.ACCOUNT_ALREADY_EXISTS);
     }
   }
 }
