@@ -26,6 +26,7 @@ export class LoginAdmInputDto {
 }
 
 export class LoginOutputDto {
+  id!: number;
   accessToken!: string;
 }
 

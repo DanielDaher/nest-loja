@@ -31,6 +31,9 @@ export class AuthenticationService {
       throw new BadRequestException(ErrorMessages.INVALID_CREDENTIALS);
     }
 
-    return { accessToken: this.jwtService.generateToken(account) };
+    return {
+      id: account.id,
+      accessToken: this.jwtService.generateToken(account),
+    };
   }
 }
