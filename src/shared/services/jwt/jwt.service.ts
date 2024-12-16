@@ -11,7 +11,7 @@ export class JwtAuthService {
       id: data.id,
       role: data.role,
       name: data.name,
-      profilePicture: data.profilePicture,
+      imageUrl: data.imageUrl,
     };
 
     return this.jwtService.sign(payload, {
