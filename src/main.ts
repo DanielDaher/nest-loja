@@ -28,6 +28,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document); // aqui define a rota do swagger
 
+  app.enableCors();
   await app.listen(process.env.PORT as string);
 }
 bootstrap();
