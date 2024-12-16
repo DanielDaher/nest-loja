@@ -2,6 +2,7 @@ import { AddressService } from './address.service';
 import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
 import { Swagger } from 'src/shared/openapi/swagger';
+import { Queries } from 'src/shared/validators/dtos/queries.dto';
 import {
   Controller,
   Get,
@@ -10,13 +11,16 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
+import { RequiredRoles } from '../authentication/decorators/required-role.decorator';
 
 @Controller('addresses')
 export class AddressController {
   constructor(private readonly addressService: AddressService) {}
 
   @Post()
+  @RequiredRoles()
   @Swagger({
     summary: 'Rota para cadastrar um novo endereço de um usuário',
     applyBadRequest: true,
@@ -31,6 +35,7 @@ export class AddressController {
   }
 
   @Get()
+  @RequiredRoles()
   @Swagger({
     summary: 'Rota para listar todos os endereços cadastrados',
     description: `
@@ -43,11 +48,13 @@ export class AddressController {
     okResponse: [CreateAddressDto],
     tags: ['Gerencial - Endereço'],
   })
-  findAll() {
-    return this.addressService.findAll();
+  async findAll(@Query() queries: Queries) {
+    const { size, page, search } = queries;
+    return this.addressService.findAll(size, page, search);
   }
 
   @Get(':id')
+  @RequiredRoles()
   @Swagger({
     summary: 'Rota para buscar os endereços pelo id',
     applyBadRequest: true,
@@ -62,6 +69,7 @@ export class AddressController {
   }
 
   @Patch(':id')
+  @RequiredRoles()
   @Swagger({
     summary: 'Rota para editar informações de um endereço',
     description: `## - Não há necessidade de enviar todos os parâmetros, apenas aqueles que deseja editar.
@@ -79,6 +87,7 @@ export class AddressController {
   }
 
   @Delete(':id')
+  @RequiredRoles()
   @Swagger({
     summary: 'Rota para deletar um endereço',
     description:
