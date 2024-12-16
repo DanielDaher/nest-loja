@@ -33,12 +33,13 @@ export class UserDAO {
     };
 
     const paginateData: boolean = Boolean(page && size);
+    const pageCalculation = ((page || 1) - 1) * (size || 1);
 
     return this.prisma.$transaction([
       this.prisma.user.findMany({
         where,
         take: paginateData ? size : undefined,
-        skip: paginateData ? (page - 1) * size : undefined,
+        skip: paginateData ? pageCalculation : undefined,
         select: userSelect,
         orderBy: paginateData ? { createdAt: 'desc' } : undefined,
       }),
